@@ -135,6 +135,14 @@ EOT
   validation {
     condition = alltrue([
       for k, v in var.managed_disks : (
+        v.disk_size_gb == null || (v.disk_size_gb >= 0 && v.disk_size_gb <= 65536)
+      )
+    ])
+    error_message = "must be between 0 and 65536"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.managed_disks : (
         v.upload_size_bytes == null || (v.upload_size_bytes >= 1)
       )
     ])
@@ -196,6 +204,6 @@ EOT
     ])
     error_message = "[from tags.Validate: invalid when len(value) > 50]"
   }
-  # Note: 19 additional provider-side validators are enforced at apply time but not mirrored as validation{} blocks here (bespoke or non-mechanically-translatable).
+  # Note: 18 additional provider-side validators are enforced at apply time but not mirrored as validation{} blocks here (bespoke or non-mechanically-translatable).
 }
 
